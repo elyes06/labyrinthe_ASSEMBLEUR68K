@@ -1,0 +1,1473 @@
+00000100 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 13/09/2024 07:38:08
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      :
+00000000                             3  * Written by :
+00000000                             4  * Date       :
+00000000                             5  * Description:
+00000000                             6  *-----------------------------------------------------------
+00000100                             7      ORG    $100
+00000100                             8      *PROGRAMME
+00000100  223C 00A692B0              9      MOVE.L #$00a692b0,D1
+00000106  4EB9 00000C1E             10      JSR SET_FILL_COLOR
+0000010C  4EB9 00000BDE             11      JSR SET_PEN_COLOR
+00000112  323C 001F                 12      MOVE #31,D1
+00000116  343C 0018                 13      MOVE #24,D2
+0000011A  4EB9 00000C26             14      JSR DRAW_BOX
+00000120  43F9 000011C4             15      LEA.L TITLE,A1
+00000126  4EB9 00000C5A             16      JSR OPEN_FILE
+0000012C  243C 00000A5D             17      MOVE.L #2653,D2
+00000132  4EB9 00000C6A             18      JSR READ_FILE
+00000138  4EB9 00000C62             19      JSR CLOSE_FILE
+0000013E  4EB9 00000CD6             20      JSR AFFSTRING
+00000144  4EB9 00000C7A             21      JSR SAISCAR
+0000014A  B27C 001B                 22      CMP #$1B,D1 * ESCAPE
+0000014E  6700 0D12                 23      BEQ FINPRG
+00000152  227C 00000000             24      MOVE.L #0,A1
+00000158  23FC 00000000 00001180    25      MOVE.L #0,LEVEL
+00000162                            26  LEVELS: 
+00000162  0CB9 00000003 00001180    27      CMP.L #3,LEVEL
+0000016C  6700 006A                 28      BEQ STOP
+00000170  52B9 00001180             29      ADD.L #1,LEVEL
+00000176  4EB9 000005FE             30      JSR GENERATE_WALLS
+0000017C                            31      
+0000017C  41F9 00000E78             32      LEA.L MAP,A0
+00000182  43F9 00001198             33      LEA.L VOID_X,A1
+00000188  45F9 000011A0             34      LEA.L VOID_Y,A2
+0000018E                            35      
+0000018E  23FC 00000001 00001188    36      MOVE.L #1,START_X
+00000198  23FC 00000001 0000118C    37      MOVE.L #1,START_Y
+000001A2                            38      
+000001A2  7E01                      39      MOVE.L #1,D7
+000001A4  7C01                      40      MOVE.L #1,D6
+000001A6  4EB9 00000662             41      JSR GET_COORDS
+000001AC  11BC 0003 4000            42      MOVE.B #3,(A0,D4)
+000001B2                            43      
+000001B2  23FC 00000000 000011AC    44      MOVE.L #0,OMEGA
+000001BC  23FC 00000002 000011A8    45      MOVE.L #2,DELTA
+000001C6  4EB9 0000066C             46      JSR PATH_GENERATOR
+000001CC                            47  
+000001CC                            48  START:
+000001CC                            49  
+000001CC  4EB9 000005C8             50      JSR DRAW_MAP
+000001D2  4EB9 00000236             51      JSR MOVEMENT
+000001D8                            52  
+000001D8                            53  STOP:
+000001D8                            54  
+000001D8  223C 00A692B0             55      MOVE.L #$00a692b0,D1
+000001DE  4EB9 00000C1E             56      JSR SET_FILL_COLOR
+000001E4  4EB9 00000BDE             57      JSR SET_PEN_COLOR
+000001EA                            58      
+000001EA  3E3C 0000                 59      MOVE #0,D7
+000001EE                            60  LOOP_BUG:
+000001EE  7400                      61      MOVE.L #0,D2
+000001F0  2207                      62      MOVE.L D7,D1
+000001F2  BEBC 00000020             63      CMP.L #32,D7
+000001F8  6700 000C                 64      BEQ CONTINUE_BUG
+000001FC  4EB9 00000C26             65      JSR DRAW_BOX
+00000202  5287                      66      ADD.L #1,D7
+00000204  60E8                      67      BRA LOOP_BUG
+00000206                            68  CONTINUE_BUG:   
+00000206  43F9 00000E68             69      LEA.L FINALE,A1
+0000020C  4EB9 00000C5A             70      JSR OPEN_FILE
+00000212  243C 00000A7D             71      MOVE.L #2685,D2
+00000218  43F9 00000E68             72      LEA.L FINALE,A1
+0000021E  4EB9 00000C6A             73      JSR READ_FILE
+00000224  4EB9 00000C62             74      JSR CLOSE_FILE
+0000022A  4EB9 00000CD6             75      JSR AFFSTRING
+00000230                            76      
+00000230                            77  
+00000230  4EF9 00000E62             78      JMP FINPRG
+00000236                            79  
+00000236                            80  ** PLAYER
+00000236                            81  MOVEMENT:
+00000236  223C 000AAE40             82      MOVE.L #$000AAE40,D1
+0000023C  4EB9 00000C1E             83      JSR SET_FILL_COLOR
+00000242                            84      *MOVE.L #$00AAFAAA,D1
+00000242  223C 0017141C             85      MOVE.L #$0017141c,D1
+00000248  4EB9 00000BDE             86      JSR SET_PEN_COLOR
+0000024E                            87     
+0000024E                            88      
+0000024E                            89      
+0000024E  23FC 00000001 000011B0    90      MOVE.L #1,PLAYER_X
+00000258  23FC 00000001 000011B4    91      MOVE.L #1,PLAYER_Y
+00000262                            92      
+00000262  2239 000011B0             93      MOVE.L PLAYER_X,D1
+00000268  2439 000011B4             94      MOVE.L PLAYER_Y,D2
+0000026E  4EB9 00000C26             95      JSR DRAW_BOX
+00000274                            96  REWINDING:
+00000274                            97  
+00000274                            98  
+00000274                            99      
+00000274  323C 5000                100      MOVE.W #$5000,D1
+00000278  4EB9 00000C82            101      JSR POS_CURS
+0000027E  7200                     102      MOVE.L #0,D1
+00000280  4EB9 00000C7A            103      JSR SAISCAR
+00000286                           104  
+00000286  B27C 0077                105      CMP #$77,D1 * w minuscule
+0000028A  6700 0064                106      BEQ TOP
+0000028E  B27C 0057                107      CMP #$57,D1 * W MAJUSCULE
+00000292  6700 005C                108      BEQ TOP
+00000296  B27C 007A                109      CMP #$7A,D1 * z minuscule
+0000029A  6700 0054                110      BEQ TOP
+0000029E  B27C 005A                111      CMP #$5A,D1 * Z MAJUSCULE
+000002A2  6700 004C                112      BEQ TOP
+000002A6  B27C 0061                113      CMP #$61,D1 * q minuscule
+000002AA  6700 00DC                114      BEQ LEFT
+000002AE  B27C 0051                115      CMP #$51,D1 * Q MAJUSCULE
+000002B2  6700 00D4                116      BEQ LEFT
+000002B6  B27C 0071                117      CMP #$71,D1 * a minuscule
+000002BA  6700 00CC                118      BEQ LEFT
+000002BE  B27C 0041                119      CMP #$41,D1 * A MAJUSCULE
+000002C2  6700 00C4                120      BEQ LEFT
+000002C6  B27C 0064                121      CMP #$64,D1 * d minuscule
+000002CA  6700 0154                122      BEQ RIGHT
+000002CE  B27C 0044                123      CMP #$44,D1 * D MAJUSCULE
+000002D2  6700 014C                124      BEQ RIGHT
+000002D6  B27C 0073                125      CMP #$73,D1 * s minuscule
+000002DA  6700 01DC                126      BEQ BOT
+000002DE  B27C 0053                127      CMP #$53,D1 * S MAJUSCULE
+000002E2  6700 01D4                128      BEQ BOT
+000002E6  B27C 001B                129      CMP #$1B,D1 * ESCAPE
+000002EA  6700 FEEC                130      BEQ STOP
+000002EE  6084                     131      BRA REWINDING
+000002F0                           132      
+000002F0                           133  TOP:
+000002F0                           134      *BORDERS PREVENT
+000002F0  53B9 000011B4            135      SUB.L #1,PLAYER_Y
+000002F6  0CB9 00000000 000011B4   136      CMP.L #0,PLAYER_Y
+00000300  6D00 0262                137      BLT REWINDING_TOP
+00000304  52B9 000011B4            138      ADD.L #1,PLAYER_Y
+0000030A                           139      
+0000030A                           140      *WALLS PREVENT
+0000030A  41F9 00000E78            141      LEA.L MAP,A0
+00000310  53B9 000011B4            142      SUB.L #1,PLAYER_Y
+00000316                           143      
+00000316  2A39 000011B0            144      MOVE.L PLAYER_X, D5
+0000031C  2C39 000011B4            145      MOVE.L PLAYER_Y, D6
+00000322  4EB9 000005BE            146      JSR GENERATE_CHANGING_COORDS
+00000328                           147      
+00000328  0C30 0002 7000           148      CMP.B #2,(A0,D7)
+0000032E  6700 FE32                149      BEQ LEVELS
+00000332                           150      
+00000332  0C30 0001 7000           151      CMP.B #1,(A0, D7)
+00000338  6700 022A                152      BEQ REWINDING_TOP
+0000033C  52B9 000011B4            153      ADD.L #1,PLAYER_Y
+00000342                           154      
+00000342                           155      
+00000342  4EB9 0000057A            156      JSR GET_COLOR
+00000348  4EB9 00000C1E            157      JSR SET_FILL_COLOR
+0000034E  2239 000011B0            158      MOVE.L PLAYER_X,D1
+00000354  2439 000011B4            159      MOVE.L PLAYER_Y,D2
+0000035A  4EB9 00000C26            160      JSR DRAW_BOX
+00000360                           161      
+00000360  53B9 000011B4            162      SUB.L #1,PLAYER_Y
+00000366                           163      
+00000366                           164  
+00000366  223C 00A692B0            165      MOVE.L #$00a692b0,D1
+0000036C                           166      
+0000036C  4EB9 00000C1E            167      JSR SET_FILL_COLOR
+00000372                           168      
+00000372  2239 000011B0            169      MOVE.L PLAYER_X,D1
+00000378  2439 000011B4            170      MOVE.L PLAYER_Y,D2
+0000037E  4EB9 00000C26            171      JSR DRAW_BOX
+00000384  6000 FEEE                172      BRA REWINDING
+00000388                           173  LEFT:
+00000388                           174      *BORDERS PREVENT
+00000388  53B9 000011B0            175      SUB.L #1,PLAYER_X
+0000038E  0CB9 00000000 000011B0   176      CMP.L #0,PLAYER_X
+00000398  6D00 01C0                177      BLT REWINDING_LEFT
+0000039C  52B9 000011B0            178      ADD.L #1,PLAYER_X
+000003A2                           179      
+000003A2                           180      *WALLS PREVENT
+000003A2  41F9 00000E78            181      LEA.L MAP,A0
+000003A8  53B9 000011B0            182      SUB.L #1,PLAYER_X
+000003AE  2A39 000011B0            183      MOVE.L PLAYER_X, D5
+000003B4  2C39 000011B4            184      MOVE.L PLAYER_Y, D6
+000003BA  4EB9 000005BE            185      JSR GENERATE_CHANGING_COORDS
+000003C0                           186      
+000003C0  0C30 0002 7000           187      CMP.B #2,(A0,D7)
+000003C6  6700 FD9A                188      BEQ LEVELS
+000003CA                           189  
+000003CA  0C30 0001 7000           190      CMP.B #1,(A0, D7)
+000003D0  6700 0188                191      BEQ REWINDING_LEFT
+000003D4  52B9 000011B0            192      ADD.L #1,PLAYER_X
+000003DA                           193  
+000003DA  4EB9 0000057A            194      JSR GET_COLOR
+000003E0  4EB9 00000C1E            195      JSR SET_FILL_COLOR
+000003E6  2239 000011B0            196      MOVE.L PLAYER_X,D1
+000003EC  2439 000011B4            197      MOVE.L PLAYER_Y,D2
+000003F2  4EB9 00000C26            198      JSR DRAW_BOX
+000003F8  53B9 000011B0            199      SUB.L #1,PLAYER_X
+000003FE                           200      
+000003FE                           201      *MOVE.L #$000A,D7
+000003FE                           202      *JSR RANDOM_COLOR
+000003FE  223C 00A692B0            203      MOVE.L #$00a692b0,D1
+00000404  4EB9 00000C1E            204      JSR SET_FILL_COLOR
+0000040A                           205  
+0000040A  2239 000011B0            206      MOVE.L PLAYER_X,D1
+00000410  2439 000011B4            207      MOVE.L PLAYER_Y,D2
+00000416  4EB9 00000C26            208      JSR DRAW_BOX
+0000041C  6000 FE56                209      BRA REWINDING
+00000420                           210  RIGHT:
+00000420                           211      *BORDERS PREVENT
+00000420  52B9 000011B0            212      ADD.L #1,PLAYER_X
+00000426  0CB9 0000001F 000011B0   213      CMP.L #31,PLAYER_X
+00000430  6E00 011E                214      BGT REWINDING_RIGHT
+00000434  53B9 000011B0            215      SUB.L #1,PLAYER_X
+0000043A                           216      
+0000043A                           217      *WALLS PREVENT
+0000043A  41F9 00000E78            218      LEA.L MAP,A0
+00000440  52B9 000011B0            219      ADD.L #1,PLAYER_X
+00000446  2A39 000011B0            220      MOVE.L PLAYER_X, D5
+0000044C  2C39 000011B4            221      MOVE.L PLAYER_Y, D6
+00000452  4EB9 000005BE            222      JSR GENERATE_CHANGING_COORDS
+00000458                           223      
+00000458  0C30 0002 7000           224      CMP.B #2,(A0,D7)
+0000045E  6700 FD02                225      BEQ LEVELS
+00000462                           226  
+00000462  0C30 0001 7000           227      CMP.B #1,(A0, D7)
+00000468  6700 00E6                228      BEQ REWINDING_RIGHT
+0000046C  53B9 000011B0            229      SUB.L #1,PLAYER_X
+00000472                           230      
+00000472  4EB9 0000057A            231      JSR GET_COLOR
+00000478  4EB9 00000C1E            232      JSR SET_FILL_COLOR
+0000047E  2239 000011B0            233      MOVE.L PLAYER_X,D1
+00000484  2439 000011B4            234      MOVE.L PLAYER_Y,D2
+0000048A  4EB9 00000C26            235      JSR DRAW_BOX
+00000490  52B9 000011B0            236      ADD.L #1,PLAYER_X
+00000496                           237      
+00000496  223C 00A692B0            238      MOVE.L #$00a692b0,D1
+0000049C                           239      
+0000049C  4EB9 00000C1E            240      JSR SET_FILL_COLOR
+000004A2                           241      
+000004A2  2239 000011B0            242      MOVE.L PLAYER_X,D1
+000004A8  2439 000011B4            243      MOVE.L PLAYER_Y,D2
+000004AE  4EB9 00000C26            244      JSR DRAW_BOX
+000004B4  6000 FDBE                245      BRA REWINDING
+000004B8                           246  BOT:
+000004B8                           247          
+000004B8                           248      *BORDERS PREVENT
+000004B8  52B9 000011B4            249      ADD.L #1,PLAYER_Y
+000004BE  0CB9 00000017 000011B4   250      CMP.L #23,PLAYER_Y
+000004C8  6E00 00A4                251      BGT REWINDING_BOT
+000004CC  53B9 000011B4            252      SUB.L #1,PLAYER_Y
+000004D2                           253  
+000004D2                           254      *WALLS PREVENT
+000004D2  41F9 00000E78            255      LEA.L MAP,A0
+000004D8  52B9 000011B4            256      ADD.L #1,PLAYER_Y
+000004DE  2A39 000011B0            257      MOVE.L PLAYER_X, D5
+000004E4  2C39 000011B4            258      MOVE.L PLAYER_Y, D6
+000004EA  4EB9 000005BE            259      JSR GENERATE_CHANGING_COORDS
+000004F0                           260      
+000004F0  0C30 0002 7000           261      CMP.B #2,(A0,D7)
+000004F6  6700 FC6A                262      BEQ LEVELS
+000004FA                           263  
+000004FA  0C30 0001 7000           264      CMP.B #1,(A0, D7)
+00000500  6700 006C                265      BEQ REWINDING_BOT
+00000504  53B9 000011B4            266      SUB.L #1,PLAYER_Y
+0000050A                           267      
+0000050A                           268      
+0000050A  4EB9 0000057A            269      JSR GET_COLOR
+00000510  4EB9 00000C1E            270      JSR SET_FILL_COLOR
+00000516                           271      
+00000516  2239 000011B0            272      MOVE.L PLAYER_X,D1
+0000051C  2439 000011B4            273      MOVE.L PLAYER_Y,D2
+00000522  4EB9 00000C26            274      JSR DRAW_BOX
+00000528                           275  
+00000528  52B9 000011B4            276      ADD.L #1,PLAYER_Y
+0000052E                           277  
+0000052E                           278      *MOVE.L #$000A,D7
+0000052E                           279      *JSR RANDOM_COLOR   
+0000052E  223C 00A692B0            280      MOVE.L #$00a692b0,D1
+00000534                           281      
+00000534  4EB9 00000C1E            282      JSR SET_FILL_COLOR
+0000053A                           283      
+0000053A  2239 000011B0            284      MOVE.L PLAYER_X,D1
+00000540  2439 000011B4            285      MOVE.L PLAYER_Y,D2
+00000546  4EB9 00000C26            286      JSR DRAW_BOX
+0000054C  6000 FD26                287      BRA REWINDING
+00000550                           288  
+00000550                           289  
+00000550                           290  
+00000550                           291  REWINDING_RIGHT:
+00000550  53B9 000011B0            292      SUB.L #1,PLAYER_X
+00000556  6000 FD1C                293      BRA REWINDING
+0000055A                           294  REWINDING_LEFT:
+0000055A  52B9 000011B0            295      ADD.L #1,PLAYER_X
+00000560  6000 FD12                296      BRA REWINDING
+00000564                           297  REWINDING_TOP:
+00000564  52B9 000011B4            298      ADD.L #1,PLAYER_Y
+0000056A  6000 FD08                299      BRA REWINDING
+0000056E                           300  REWINDING_BOT:
+0000056E  53B9 000011B4            301      SUB.L #1,PLAYER_Y
+00000574  6000 FCFE                302      BRA REWINDING    
+00000578                           303  
+00000578                           304  FIN:
+00000578  4E75                     305      RTS    
+0000057A                           306      
+0000057A                           307  
+0000057A                           308  
+0000057A                           309  GET_COLOR:
+0000057A                           310      *MOVE.L #$00AAFAAA,D1
+0000057A  223C 0017141C            311      MOVE.L #$0017141c,D1
+00000580  41F9 00000E78            312      LEA.L MAP,A0
+00000586  2A39 000011B0            313      MOVE.L PLAYER_X,D5
+0000058C  2C39 000011B4            314      MOVE.L PLAYER_Y,D6
+00000592  4EB9 000005BE            315      JSR GENERATE_CHANGING_COORDS
+00000598  0C30 0002 7000           316      CMP.B #2,(A0, D7)
+0000059E  6700 0016                317      BEQ GET_COLOR_WIN
+000005A2  0C30 0000 7000           318      CMP.B #0,(A0, D7)
+000005A8  6700 0004                319      BEQ GET_COLOR_SPAWN
+000005AC  4E75                     320      RTS
+000005AE                           321  GET_COLOR_SPAWN:
+000005AE  223C 00FF0099            322      MOVE.L #$00FF0099,D1
+000005B4  4E75                     323      RTS
+000005B6                           324  GET_COLOR_WIN:
+000005B6  223C 00000099            325      MOVE.L #$00000099,D1
+000005BC  4E75                     326      RTS
+000005BE                           327  GENERATE_CHANGING_COORDS:
+000005BE  2E06                     328      MOVE.L D6, D7
+000005C0  CEFC 0020                329      MULU #32, D7
+000005C4  DE85                     330      ADD.L D5, D7
+000005C6  4E75                     331      RTS
+000005C8                           332      
+000005C8                           333      
+000005C8                           334  ** DRAW_MAP
+000005C8                           335  DRAW_MAP:
+000005C8  41F9 00000E78            336      LEA.L MAP,A0
+000005CE  7A00                     337      MOVE.L #0,D5
+000005D0  7C00                     338      MOVE.L #0,D6
+000005D2                           339  DRAW_MAP_LOOP:
+000005D2  2E06                     340      MOVE.L D6,D7
+000005D4  CEFC 0020                341      MULU #32,D7
+000005D8  DE85                     342      ADD.L D5,D7
+000005DA                           343  ** set color depending on (A0,D7)
+000005DA                           344      
+000005DA  4EB9 00000DEE            345      JSR GEN_COLOR
+000005E0                           346      
+000005E0                           347  *    MOVE.L D5,D1
+000005E0                           348  *    MOVE.L D6,D2
+000005E0                           349    
+000005E0                           350  *    JSR DRAW_TEXTURE
+000005E0                           351  *SKIP_TEXTURE:   
+000005E0                           352  *    JSR SET_PEN_COLOR
+000005E0                           353  *    JSR SET_FILL_COLOR 
+000005E0                           354      
+000005E0                           355  *    MOVE.L D5,D1
+000005E0                           356  *    MOVE.L D6,D2
+000005E0                           357  *    JSR DRAW_BOX
+000005E0                           358  ** increment X then check if y equals 24
+000005E0                           359  SKIP_SIMPLE_BLOC:
+000005E0  BABC 0000001F            360      CMP.L #31, D5
+000005E6  6700 0010                361      BEQ DRAW_MAP_YFIX
+000005EA  5285                     362      ADD.L #1, D5
+000005EC                           363  DRAW_MAP_LOOP_RESUME:
+000005EC  BCBC 00000018            364      cmp.L #24, D6
+000005F2  6700 0076                365      BEQ RTS_LTE
+000005F6  60DA                     366      BRA DRAW_MAP_LOOP
+000005F8                           367  DRAW_MAP_YFIX:
+000005F8  5286                     368      ADD.L #1, D6
+000005FA  7A00                     369      MOVE.L #0, D5
+000005FC  60EE                     370      BRA DRAW_MAP_LOOP_RESUME
+000005FE                           371  **////////////////////////////////////**    
+000005FE                           372  ** generate walls where one row is 1/0/1/0 
+000005FE                           373  ** and the row after that is filled with 1s, so on
+000005FE                           374  GENERATE_WALLS:
+000005FE  41F9 00000E78            375      LEA.L MAP,A0
+00000604  7E00                     376      MOVE.L #0,D7
+00000606  7C00                     377      MOVE.L #0,D6
+00000608                           378  GENERATE_WALLS_LOOP:
+00000608  4EB9 00000662            379      JSR GET_COORDS
+0000060E                           380  
+0000060E  2607                     381      MOVE.L D7,D3
+00000610  86FC 0002                382      DIVU #2,D3
+00000614  E08B                     383      LSR.L #8,D3
+00000616  E08B                     384      LSR.L #8,D3
+00000618                           385  
+00000618  B6BC 00000000            386      CMP.L #0,D3
+0000061E  6700 002A                387      BEQ PUT_ONE
+00000622                           388  
+00000622  2606                     389      MOVE.L D6, D3
+00000624  86FC 0002                390      DIVU #2, D3
+00000628  E08B                     391      LSR.L #8, D3
+0000062A  E08B                     392      LSR.L #8, D3
+0000062C                           393  
+0000062C  B6BC 00000000            394      CMP.L #0, D3
+00000632  6700 0016                395      BEQ PUT_ONE
+00000636  11BC 0000 4000           396      MOVE.B #0, (A0, D4)
+0000063C                           397  GENERATE_WALLS_RETURN:
+0000063C  BEBC 0000001F            398      CMP.L #31, D7
+00000642  6700 000E                399      BEQ GENERATE_WALLS_Y
+00000646                           400  
+00000646  5287                     401      ADD.L #1, D7
+00000648  60BE                     402      BRA GENERATE_WALLS_LOOP
+0000064A                           403  PUT_ONE:
+0000064A  11BC 0001 4000           404      MOVE.B #1, (A0, D4)
+00000650  60EA                     405      BRA GENERATE_WALLS_RETURN
+00000652                           406  
+00000652                           407  GENERATE_WALLS_Y:
+00000652  5286                     408      ADD.L #1, D6
+00000654  7E00                     409      MOVE.L #0, D7
+00000656  BCBC 00000018            410      CMP.L #24, D6
+0000065C  6700 000C                411      BEQ RTS_LTE
+00000660  60A6                     412      BRA GENERATE_WALLS_LOOP
+00000662                           413  **/////////////////////////////////**   
+00000662                           414  ** a function to generate coordinations in our "2d tab"
+00000662                           415  GET_COORDS:
+00000662  7820                     416      MOVE.L #32,D4
+00000664  C8C6                     417      MULU D6,D4
+00000666  D887                     418      ADD.L D7,D4
+00000668  4E75                     419      RTS 
+0000066A                           420  **////////////////////////////////**
+0000066A                           421  RTS_LTE:
+0000066A  4E75                     422      RTS
+0000066C                           423  **////////////////////////////////**
+0000066C                           424  ** generate path algorithm
+0000066C                           425  PATH_GENERATOR:
+0000066C  137C 0028 0000           426      MOVE.B #40,$0(A1)
+00000672  157C 0028 0000           427      MOVE.B #40,$0(A2)
+00000678  137C 0028 0001           428      MOVE.B #40,$1(A1)
+0000067E  157C 0028 0001           429      MOVE.B #40,$1(A2)
+00000684  23FC 00000000 000011AC   430      MOVE.L #0,OMEGA
+0000068E  4EB9 00000694            431      JSR FIND_CLOSEST_TO_START
+00000694                           432      
+00000694                           433  FIND_CLOSEST_TO_START:
+00000694  2E39 00001188            434      MOVE.L START_X,D7
+0000069A  2C39 0000118C            435      MOVE.L START_Y,D6
+000006A0  DEB9 000011A8            436      ADD.L DELTA,D7
+000006A6                           437      
+000006A6  6000 0026                438      BRA FIND_CLOSEST_TO_START_FROM_X
+000006AA                           439  CONTINUE_FIND_CLOSEST_TO_START:
+000006AA                           440      
+000006AA  2E39 00001188            441      MOVE.L START_X,D7
+000006B0  2C39 0000118C            442      MOVE.L START_Y,D6
+000006B6                           443      
+000006B6  0CB9 00000018 000011A8   444      CMP.L #24,DELTA
+000006C0  6A00 00CA                445      BPL BEFORE_CLOSEST_TO_START
+000006C4  DCB9 000011A8            446      ADD.L DELTA,D6
+000006CA  6000 0060                447      BRA FIND_CLOSEST_TO_START_FROM_Y
+000006CE                           448      
+000006CE                           449  FIND_CLOSEST_TO_START_FROM_X:
+000006CE  2A39 0000118C            450      MOVE.L START_Y,D5
+000006D4  DAB9 000011A8            451      ADD.L DELTA,D5
+000006DA  BC85                     452      CMP.L D5,D6
+000006DC  6ECC                     453      BGT CONTINUE_FIND_CLOSEST_TO_START
+000006DE                           454      
+000006DE  4EB8 0662                455      JSR GET_COORDS
+000006E2  0C30 0003 4000           456      CMP.B #3,(A0,D4)
+000006E8  6700 0018                457      BEQ SKIP_CLOSEST_TO_START_FROM_X
+000006EC                           458      
+000006EC  2607                     459      MOVE.L D7,D3
+000006EE  D686                     460      ADD.L D6,D3
+000006F0                           461      
+000006F0  1429 0000                462      MOVE.B $0(A1),D2
+000006F4  D42A 0000                463      ADD.B $0(A2),D2
+000006F8                           464      
+000006F8  B602                     465      CMP.B D2,D3 
+000006FA  6B00 000A                466      BMI SAVE_CLOSEST_TO_START_X1
+000006FE  6700 0016                467      BEQ SAVE_CLOSEST_TO_START_X2
+00000702                           468      
+00000702                           469  SKIP_CLOSEST_TO_START_FROM_X:
+00000702  5486                     470      ADD.L #2,D6
+00000704  60C8                     471      BRA FIND_CLOSEST_TO_START_FROM_X
+00000706                           472  
+00000706                           473  SAVE_CLOSEST_TO_START_X1:
+00000706  2039 000011AC            474      MOVE.L OMEGA,D0
+0000070C                           475      
+0000070C  1387 0000                476      MOVE.B D7,(A1,D0)
+00000710  1586 0000                477      MOVE.B D6,(A2,D0)
+00000714  60EC                     478      BRA SKIP_CLOSEST_TO_START_FROM_X
+00000716                           479      
+00000716                           480  SAVE_CLOSEST_TO_START_X2:
+00000716  52B9 000011AC            481      ADD.L #1,OMEGA
+0000071C  2039 000011AC            482      MOVE.L OMEGA,D0
+00000722                           483      
+00000722  1387 0000                484      MOVE.B D7,(A1,D0)
+00000726  1586 0000                485      MOVE.B D6,(A2,D0)
+0000072A  60D6                     486      BRA SKIP_CLOSEST_TO_START_FROM_X    
+0000072C                           487  
+0000072C                           488      
+0000072C                           489  FIND_CLOSEST_TO_START_FROM_Y:
+0000072C  2A39 00001188            490      MOVE.L START_X,D5
+00000732  DAB9 000011A8            491      ADD.L DELTA,D5
+00000738  BE85                     492      CMP.L D5,D7
+0000073A  6E00 0050                493      BGT BEFORE_CLOSEST_TO_START
+0000073E                           494      
+0000073E  4EB8 0662                495      JSR GET_COORDS
+00000742  0C30 0003 4000           496      CMP.B #3,(A0,D4)
+00000748  6700 0018                497      BEQ SKIP_CLOSEST_TO_START_FROM_Y
+0000074C                           498      
+0000074C  2607                     499      MOVE.L D7,D3
+0000074E  D686                     500      ADD.L D6,D3
+00000750                           501      
+00000750  1429 0000                502      MOVE.B $0(A1),D2
+00000754  D42A 0000                503      ADD.B $0(A2),D2
+00000758                           504      
+00000758  B602                     505      CMP.B D2,D3 
+0000075A  6B00 000A                506      BMI SAVE_CLOSEST_TO_START_Y1
+0000075E  6700 0016                507      BEQ SAVE_CLOSEST_TO_START_Y2
+00000762                           508  
+00000762                           509  SKIP_CLOSEST_TO_START_FROM_Y:
+00000762  5487                     510      ADD.L #2,D7
+00000764  60C6                     511      BRA FIND_CLOSEST_TO_START_FROM_Y
+00000766                           512      
+00000766                           513  SAVE_CLOSEST_TO_START_Y1:
+00000766  2039 000011AC            514      MOVE.L OMEGA,D0
+0000076C                           515      
+0000076C  1387 0000                516      MOVE.B D7,(A1,D0)
+00000770  1586 0000                517      MOVE.B D6,(A2,D0)
+00000774  60EC                     518      BRA SKIP_CLOSEST_TO_START_FROM_Y
+00000776                           519      
+00000776                           520  SAVE_CLOSEST_TO_START_Y2:
+00000776  52B9 000011AC            521      ADD.L #1,OMEGA
+0000077C  2039 000011AC            522      MOVE.L OMEGA,D0
+00000782                           523      
+00000782  1387 0000                524      MOVE.B D7,(A1,D0)
+00000786  1586 0000                525      MOVE.B D6,(A2,D0)
+0000078A  60D6                     526      BRA SKIP_CLOSEST_TO_START_FROM_Y    
+0000078C                           527  
+0000078C                           528  BEFORE_CLOSEST_TO_START:
+0000078C  0C29 0028 0000           529      CMP.B #40,$0(A1)
+00000792  6600 001A                530      BNE PROCESS_CLOSEST_TO_START
+00000796                           531      
+00000796  54B9 000011A8            532      ADD.L #2,DELTA
+0000079C  0CB9 00000020 000011A8   533      CMP.L #32,DELTA
+000007A6  6700 02A4                534      BEQ GEN_SPAWN_WIN
+000007AA                           535      
+000007AA  6000 FEC0                536      BRA PATH_GENERATOR
+000007AE                           537  PROCESS_CLOSEST_TO_START:
+000007AE  4287                     538      CLR.L D7
+000007B0  4286                     539      CLR.L D6
+000007B2  1E29 0000                540      MOVE.B $0(A1),D7
+000007B6  1C2A 0000                541      MOVE.B $0(A2),D6
+000007BA                           542      
+000007BA  0CB9 00000000 000011AC   543      CMP.L #0,OMEGA
+000007C4  6700 0028                544      BEQ SKIP_RAND
+000007C8                           545      
+000007C8  4EB9 00000CF0            546      JSR RAND
+000007CE  C23C 0001                547      AND.B #%00000001,D1
+000007D2  B23C 0000                548      CMP.B #0,D1
+000007D6  6700 0016                549      BEQ SKIP_RAND
+000007DA                           550      
+000007DA  4281                     551      CLR.L D1
+000007DC  4280                     552      CLR.L D0
+000007DE  1229 0001                553      MOVE.B $1(A1),D1
+000007E2  102A 0001                554      MOVE.B $1(A2),D0
+000007E6                           555      
+000007E6  1341 0000                556      MOVE.B D1,$0(A1)
+000007EA  1540 0000                557      MOVE.B D0,$0(A2)
+000007EE                           558  SKIP_RAND:
+000007EE  4287                     559      CLR.L D7
+000007F0  4286                     560      CLR.L D6
+000007F2  1E29 0000                561      MOVE.B $0(A1),D7
+000007F6  1C2A 0000                562      MOVE.B $0(A2),D6
+000007FA                           563      
+000007FA  4EB9 00000CF0            564      JSR RAND
+00000800  C23C 0003                565      AND.B #%00000011,D1
+00000804  B23C 0000                566      CMP.B #0,D1
+00000808  6700 0016                567      BEQ PROCESS_CLOSEST_TO_START_X_POS
+0000080C  B23C 0001                568      CMP.B #1,D1
+00000810  6700 0088                569      BEQ PROCESS_CLOSEST_TO_START_X_NEG
+00000814  B23C 0002                570      CMP.B #2,D1
+00000818  6700 0042                571      BEQ PROCESS_CLOSEST_TO_START_Y_POS
+0000081C  6000 00BC                572      BRA PROCESS_CLOSEST_TO_START_Y_NEG
+00000820                           573  
+00000820                           574  PROCESS_CLOSEST_TO_START_X_POS:
+00000820  5487                     575      ADD.L #2,D7
+00000822  BEBC 00000020            576      CMP.L #32,D7
+00000828  6AC4                     577      BPL SKIP_RAND
+0000082A                           578      
+0000082A  4EB8 0662                579      JSR GET_COORDS
+0000082E  0C30 0003 4000           580      CMP.B #3,(A0,D4)
+00000834  66B8                     581      BNE SKIP_RAND
+00000836                           582      
+00000836                           583      **FILL
+00000836  4EB8 0662                584      JSR GET_COORDS
+0000083A  11BC 0003 4000           585      MOVE.B #3,(A0,D4)
+00000840  5387                     586      SUB.L #1,D7
+00000842  4EB8 0662                587      JSR GET_COORDS
+00000846  11BC 0003 4000           588      MOVE.B #3,(A0,D4)
+0000084C  5387                     589      SUB.L #1,D7
+0000084E  4EB8 0662                590      JSR GET_COORDS
+00000852  11BC 0003 4000           591      MOVE.B #3,(A0,D4)
+00000858                           592  
+00000858  6000 00C0                593      BRA FIND_CLOSEST_TO_LAST
+0000085C                           594      
+0000085C                           595  PROCESS_CLOSEST_TO_START_Y_POS:
+0000085C  5486                     596      ADD.L #2,D6
+0000085E  BCBC 00000018            597      CMP.L #24,D6
+00000864  6A88                     598      BPL SKIP_RAND
+00000866                           599      
+00000866  4EB8 0662                600      JSR GET_COORDS
+0000086A  0C30 0003 4000           601      CMP.B #3,(A0,D4)
+00000870  6600 FF7C                602      BNE SKIP_RAND
+00000874                           603      
+00000874                           604      **FILL
+00000874  4EB8 0662                605      JSR GET_COORDS
+00000878  11BC 0003 4000           606      MOVE.B #3,(A0,D4)
+0000087E  5386                     607      SUB.L #1,D6
+00000880  4EB8 0662                608      JSR GET_COORDS
+00000884  11BC 0003 4000           609      MOVE.B #3,(A0,D4)
+0000088A  5386                     610      SUB.L #1,D6
+0000088C  4EB8 0662                611      JSR GET_COORDS
+00000890  11BC 0003 4000           612      MOVE.B #3,(A0,D4)
+00000896                           613  
+00000896  6000 0082                614      BRA FIND_CLOSEST_TO_LAST
+0000089A                           615  
+0000089A                           616  PROCESS_CLOSEST_TO_START_X_NEG:
+0000089A  5587                     617      SUB.L #2,D7
+0000089C  BEBC 00000000            618      CMP.L #0,D7
+000008A2  6F00 FF4A                619      BLE SKIP_RAND
+000008A6                           620      
+000008A6  4EB8 0662                621      JSR GET_COORDS
+000008AA  0C30 0003 4000           622      CMP.B #3,(A0,D4)
+000008B0  6600 FF3C                623      BNE SKIP_RAND
+000008B4                           624      
+000008B4                           625      **FILL
+000008B4  4EB8 0662                626      JSR GET_COORDS
+000008B8  11BC 0003 4000           627      MOVE.B #3,(A0,D4)
+000008BE  5287                     628      ADD.L #1,D7
+000008C0  4EB8 0662                629      JSR GET_COORDS
+000008C4  11BC 0003 4000           630      MOVE.B #3,(A0,D4)
+000008CA  5287                     631      ADD.L #1,D7
+000008CC  4EB8 0662                632      JSR GET_COORDS
+000008D0  11BC 0003 4000           633      MOVE.B #3,(A0,D4)
+000008D6                           634  
+000008D6  6000 0042                635      BRA FIND_CLOSEST_TO_LAST
+000008DA                           636      
+000008DA                           637  PROCESS_CLOSEST_TO_START_Y_NEG:
+000008DA  5586                     638      SUB.L #2,D6
+000008DC  BCBC 00000000            639      CMP.L #0,D6
+000008E2  6F00 FF0A                640      BLE SKIP_RAND
+000008E6                           641      
+000008E6  4EB8 0662                642      JSR GET_COORDS
+000008EA  0C30 0003 4000           643      CMP.B #3,(A0,D4)
+000008F0  6600 FEFC                644      BNE SKIP_RAND
+000008F4                           645      
+000008F4                           646      **FILL
+000008F4  4EB8 0662                647      JSR GET_COORDS
+000008F8  11BC 0003 4000           648      MOVE.B #3,(A0,D4)
+000008FE  5286                     649      ADD.L #1,D6
+00000900  4EB8 0662                650      JSR GET_COORDS
+00000904  11BC 0003 4000           651      MOVE.B #3,(A0,D4)
+0000090A  5286                     652      ADD.L #1,D6
+0000090C  4EB8 0662                653      JSR GET_COORDS
+00000910  11BC 0003 4000           654      MOVE.B #3,(A0,D4)
+00000916                           655  
+00000916  6000 0002                656      BRA FIND_CLOSEST_TO_LAST
+0000091A                           657  FIND_CLOSEST_TO_LAST:
+0000091A  4287                     658      CLR.L D7
+0000091C  4286                     659      CLR.L D6
+0000091E  1E29 0000                660      MOVE.B $0(A1),D7
+00000922  1C2A 0000                661      MOVE.B $0(A2),D6
+00000926                           662      
+00000926  BCBC 00000017            663      CMP.L #23,D6
+0000092C  6A00 FD3E                664      BPL PATH_GENERATOR
+00000930  BEBC 0000001F            665      CMP.L #31,D7
+00000936  6A00 FD34                666      BPL PATH_GENERATOR
+0000093A                           667      
+0000093A  4EB9 00000CF0            668      JSR RAND
+00000940  C23C 0003                669      AND.B #%00000011,D1
+00000944                           670      
+00000944  B23C 0000                671      CMP.B #0,D1
+00000948  6700 0016                672      BEQ PROCESS_CLOSEST_TO_LAST_X_POS
+0000094C  B23C 0001                673      CMP.B #1,D1
+00000950  6700 0082                674      BEQ PROCESS_CLOSEST_TO_LAST_X_NEG
+00000954  B23C 0002                675      CMP.B #2,D1
+00000958  6700 003E                676      BEQ PROCESS_CLOSEST_TO_LAST_Y_POS
+0000095C  6000 00B2                677      BRA PROCESS_CLOSEST_TO_LAST_Y_NEG
+00000960                           678  
+00000960                           679  PROCESS_CLOSEST_TO_LAST_X_POS:
+00000960  5487                     680      ADD.L #2,D7
+00000962  BEBC 00000020            681      CMP.L #32,D7
+00000968  6AB0                     682      BPL FIND_CLOSEST_TO_LAST
+0000096A                           683      
+0000096A  4EB8 0662                684      JSR GET_COORDS
+0000096E  0C30 0000 4000           685      CMP.B #0,(A0,D4)
+00000974  66A4                     686      BNE FIND_CLOSEST_TO_LAST
+00000976                           687      
+00000976  11BC 0003 4000           688      MOVE.B #3,(A0,D4)
+0000097C  5387                     689      SUB.L #1,D7
+0000097E  4EB8 0662                690      JSR GET_COORDS
+00000982  11BC 0003 4000           691      MOVE.B #3,(A0,D4)
+00000988  5387                     692      SUB.L #1,D7
+0000098A  4EB8 0662                693      JSR GET_COORDS
+0000098E  11BC 0003 4000           694      MOVE.B #3,(A0,D4)
+00000994                           695      
+00000994  6000 FCD6                696      BRA PATH_GENERATOR
+00000998                           697      
+00000998                           698  PROCESS_CLOSEST_TO_LAST_Y_POS:
+00000998  5486                     699      ADD.L #2,D6
+0000099A  BCBC 00000018            700      CMP.L #24,D6
+000009A0  6A00 FF78                701      BPL FIND_CLOSEST_TO_LAST
+000009A4                           702      
+000009A4  4EB8 0662                703      JSR GET_COORDS
+000009A8  0C30 0000 4000           704      CMP.B #0,(A0,D4)
+000009AE  6600 FF6A                705      BNE FIND_CLOSEST_TO_LAST
+000009B2                           706      
+000009B2  11BC 0003 4000           707      MOVE.B #3,(A0,D4)
+000009B8  5386                     708      SUB.L #1,D6
+000009BA  4EB8 0662                709      JSR GET_COORDS
+000009BE  11BC 0003 4000           710      MOVE.B #3,(A0,D4)
+000009C4  5386                     711      SUB.L #1,D6
+000009C6  4EB8 0662                712      JSR GET_COORDS
+000009CA  11BC 0003 4000           713      MOVE.B #3,(A0,D4)
+000009D0                           714      
+000009D0  6000 FC9A                715      BRA PATH_GENERATOR
+000009D4                           716  
+000009D4                           717  PROCESS_CLOSEST_TO_LAST_X_NEG:
+000009D4  5587                     718      SUB.L #2,D7
+000009D6  BEBC 00000000            719      CMP.L #0,D7
+000009DC  6F00 FF3C                720      BLE FIND_CLOSEST_TO_LAST
+000009E0                           721      
+000009E0  4EB8 0662                722      JSR GET_COORDS
+000009E4  0C30 0000 4000           723      CMP.B #0,(A0,D4)
+000009EA  6600 FF2E                724      BNE FIND_CLOSEST_TO_LAST
+000009EE                           725      
+000009EE  11BC 0003 4000           726      MOVE.B #3,(A0,D4)
+000009F4  5287                     727      ADD.L #1,D7
+000009F6  4EB8 0662                728      JSR GET_COORDS
+000009FA  11BC 0003 4000           729      MOVE.B #3,(A0,D4)
+00000A00  5287                     730      ADD.L #1,D7
+00000A02  4EB8 0662                731      JSR GET_COORDS
+00000A06  11BC 0003 4000           732      MOVE.B #3,(A0,D4)
+00000A0C                           733      
+00000A0C  6000 FC5E                734      BRA PATH_GENERATOR
+00000A10                           735      
+00000A10                           736  PROCESS_CLOSEST_TO_LAST_Y_NEG:
+00000A10  5586                     737      SUB.L #2,D6
+00000A12  BCBC 00000000            738      CMP.L #0,D6
+00000A18  6F00 FF00                739      BLE FIND_CLOSEST_TO_LAST
+00000A1C                           740      
+00000A1C  4EB8 0662                741      JSR GET_COORDS
+00000A20  0C30 0000 4000           742      CMP.B #0,(A0,D4)
+00000A26  6600 FEF2                743      BNE FIND_CLOSEST_TO_LAST
+00000A2A                           744      
+00000A2A  11BC 0003 4000           745      MOVE.B #3,(A0,D4)
+00000A30  5286                     746      ADD.L #1,D6
+00000A32  4EB8 0662                747      JSR GET_COORDS
+00000A36  11BC 0003 4000           748      MOVE.B #3,(A0,D4)
+00000A3C  5286                     749      ADD.L #1,D6
+00000A3E  4EB8 0662                750      JSR GET_COORDS
+00000A42  11BC 0003 4000           751      MOVE.B #3,(A0,D4)
+00000A48                           752      
+00000A48  6000 FC22                753      BRA PATH_GENERATOR
+00000A4C                           754  **////////////////////////**
+00000A4C                           755  GEN_SPAWN_WIN:
+00000A4C                           756      
+00000A4C  7E01                     757      MOVE.L #1,D7
+00000A4E  7C01                     758      MOVE.L #1,D6
+00000A50  4EB8 0662                759      JSR GET_COORDS
+00000A54  11BC 0000 4000           760      MOVE.B #0,(A0,D4)
+00000A5A                           761      
+00000A5A  7E1F                     762      MOVE.L #31,D7
+00000A5C  7C17                     763      MOVE.L #23,D6
+00000A5E  4EB8 0662                764      JSR GET_COORDS
+00000A62  11BC 0002 4000           765      MOVE.B #2,(A0,D4)
+00000A68                           766      
+00000A68  6000 F762                767      BRA START
+00000A6C                           768  **///////////////////////**
+00000A6C                           769  DRAW_TITLE:
+00000A6C  243C 00000A5D            770      MOVE.L #2653,D2
+00000A72  4EB9 00000C6A            771      JSR READ_FILE
+00000A78  4EB9 00000CD6            772      JSR AFFSTRING
+00000A7E  4E75                     773      RTS
+00000A80                           774  *DRAW_FINALE:
+00000A80                           775  *    LEA.L DRAWTITLE,A1
+00000A80                           776  *    MOVE.L #2653,D2
+00000A80                           777  *    JSR READ_FILE
+00000A80                           778  *    LEA.L DRAWTITLE,A1
+00000A80                           779  *    JSR AFFSTRING
+00000A80                           780  *    RTS
+00000A80                           781      
+00000A80                           782      *INCLUDE
+00000A80                           783      INCLUDE 'TEXTURE.X68'
+00000A80                           784  
+00000A80                           785      *PROGRAMME
+00000A80                           786  DRAW_TEXTURE:   
+00000A80                           787      
+00000A80                           788      *LEA.L TEXTURE,A1
+00000A80                           789      
+00000A80                           790  
+00000A80  2601                     791      MOVE.L D1,D3 
+00000A82  2802                     792      MOVE.L D2,D4 
+00000A84                           793      
+00000A84  43F9 000011B8            794      LEA.L TEXTURE,A1
+00000A8A  4EB9 00000C5A            795      JSR OPEN_FILE
+00000A90  243C 000001F4            796      MOVE.L #500,D2
+00000A96  4EB9 00000C6A            797      JSR READ_FILE
+00000A9C                           798      
+00000A9C  2404                     799      MOVE.L D4,D2
+00000A9E                           800      
+00000A9E  C6FC 0014                801      MULU #20,D3
+00000AA2  C4FC 0014                802      MULU #20,D2
+00000AA6                           803  
+00000AA6  23FC 00000076 00000BC2   804      MOVE.L #$76,OFFSET
+00000AB0                           805      
+00000AB0  23C2 00000BCE            806      MOVE.L D2,SCALING_X
+00000AB6  23C3 00000BD2            807      MOVE.L D3,SCALING_Y
+00000ABC                           808      
+00000ABC  23FC 00000014 00000BD6   809      MOVE.L #20,MAX_X
+00000AC6  23FC 00000014 00000BDA   810      MOVE.L #20,MAX_Y
+00000AD0  D5B9 00000BD6            811      ADD.L D2,MAX_X
+00000AD6  D7B9 00000BDA            812      ADD.L D3,MAX_Y
+00000ADC                           813  
+00000ADC                           814  DRAW_TEXTURE_LOOP:  
+00000ADC  B4B9 00000BD6            815      CMP.L MAX_X, D2
+00000AE2  6A00 001C                816      BPL DRAW_TEXTURE_YFIX
+00000AE6  4EB9 00000B0A            817      JSR LOOP
+00000AEC  4EB9 00000C1E            818      JSR SET_FILL_COLOR
+00000AF2  5282                     819      ADD.L #1, D2
+00000AF4                           820  DRAW_TEXTURE_LOOP_RESUME:
+00000AF4  B6B9 00000BDA            821      cmp.L MAX_Y, D3
+00000AFA  6700 00BC                822      BEQ FIN_TEXTURE
+00000AFE  60DC                     823      BRA DRAW_TEXTURE_LOOP
+00000B00                           824  DRAW_TEXTURE_YFIX:
+00000B00  5283                     825      ADD.L #1, D3
+00000B02  2439 00000BCE            826      MOVE.L SCALING_X, D2
+00000B08  60EA                     827      BRA DRAW_TEXTURE_LOOP_RESUME
+00000B0A                           828  
+00000B0A                           829  
+00000B0A                           830  
+00000B0A                           831  
+00000B0A                           832  LOOP:
+00000B0A  2803                     833      MOVE.L D3,D4
+00000B0C  98B9 00000BD2            834      SUB.L SCALING_Y,D4
+00000B12                           835      
+00000B12  2204                     836      MOVE.L D4,D1
+00000B14  C2FC 0014                837      MULU #20,D1
+00000B18                           838      
+00000B18  2802                     839      MOVE.L D2,D4
+00000B1A  98B9 00000BCE            840      SUB.L SCALING_X,D4
+00000B20                           841      
+00000B20  D284                     842      ADD.L D4,D1
+00000B22  82FC 0002                843      DIVU #2,D1
+00000B26                           844      
+00000B26                           845      
+00000B26                           846      
+00000B26  D2B9 00000BC2            847      ADD.L OFFSET,D1
+00000B2C  1231 1000                848      MOVE.B (A1,D1),D1
+00000B30                           849      
+00000B30  4284                     850      CLR.L D4
+00000B32  2801                     851      MOVE.L D1,D4
+00000B34  6000 0002                852      BRA PROCESS_2_PIXELS
+00000B38                           853  
+00000B38                           854  PROCESS_2_PIXELS:
+00000B38                           855  LOOP_RESUME:
+00000B38                           856      *FIRST (PIXEL)
+00000B38  2204                     857      MOVE.L D4,D1
+00000B3A  C2BC 000000F0            858      AND.L #$000000F0,D1
+00000B40  E809                     859      LSR.B #4,D1
+00000B42                           860  
+00000B42  C2FC 0004                861      MULU #4,D1
+00000B46  0681 00000036            862      ADD.L #54,D1
+00000B4C                           863  
+00000B4C                           864      
+00000B4C  2231 1000                865      MOVE.L (A1,D1),D1
+00000B50  E089                     866      LSR.L #8,D1
+00000B52                           867      
+00000B52                           868      
+00000B52  4EB9 00000C1E            869      JSR SET_FILL_COLOR
+00000B58  4EB9 00000BDE            870      JSR SET_PEN_COLOR
+00000B5E                           871  
+00000B5E                           872  
+00000B5E  2203                     873      MOVE.L D3,D1
+00000B60  2402                     874      MOVE.L D2,D2
+00000B62  4EB9 00000BE6            875      JSR DRAW_PIX
+00000B68                           876      
+00000B68  5282                     877      ADD.L #1,D2
+00000B6A                           878   
+00000B6A                           879      *SECOND (PIXEL)
+00000B6A  2204                     880      MOVE.L D4,D1
+00000B6C  C2BC 0000000F            881      AND.L #$0000000F,D1
+00000B72                           882      
+00000B72  C2FC 0004                883      MULU #4,D1
+00000B76  0681 00000036            884      ADD.L #54,D1
+00000B7C                           885      
+00000B7C                           886      
+00000B7C                           887      
+00000B7C  2231 1000                888      MOVE.L (A1,D1),D1
+00000B80  E089                     889      LSR.L #8,D1
+00000B82                           890      
+00000B82  4EB9 00000C1E            891      JSR SET_FILL_COLOR
+00000B88  4EB9 00000BDE            892      JSR SET_PEN_COLOR
+00000B8E                           893      
+00000B8E                           894      
+00000B8E                           895  
+00000B8E                           896      
+00000B8E  2203                     897      MOVE.L D3,D1
+00000B90  2402                     898      MOVE.L D2,D2
+00000B92  4EB9 00000BE6            899      JSR DRAW_PIX
+00000B98                           900      
+00000B98                           901      
+00000B98                           902      
+00000B98  23F9 00000BCE 00000BC6   903      MOVE.L SCALING_X,PADDING
+00000BA2  06B9 00000013 00000BC6   904      ADD.L #19,PADDING
+00000BAC  B4B9 00000BC6            905      CMP.L PADDING,D2
+00000BB2  6700 0006                906      BEQ INCREMENT_OFFSET    
+00000BB6  4E75                     907      RTS
+00000BB8                           908  
+00000BB8                           909  FIN_TEXTURE:
+00000BB8  4E75                     910      RTS
+00000BBA                           911  INCREMENT_OFFSET:
+00000BBA  54B9 00000BC2            912      ADD.L #2,OFFSET
+00000BC0  4E75                     913      RTS
+00000BC2                           914      
+00000BC2                           915      *INCLUDE
+00000BC2                           916      *INCLUDE 'BIBLIO.X68'
+00000BC2                           917      *INCLUDE 'PERIPH.X68'
+00000BC2                           918      *VARIABLES
+00000BC2                           919      
+00000BC2                           920      OFFSET: DS.L 1
+00000BC6                           921      PADDING: DS.L 1
+00000BCA                           922      
+00000BCA                           923      SCALING: DS.L 1
+00000BCE                           924      SCALING_X: DS.L 1
+00000BD2                           925      SCALING_Y: DS.L 1
+00000BD6                           926      
+00000BD6                           927      MAX_X: DS.L 1
+00000BDA                           928      MAX_Y: DS.L 1
+00000BDE                           929  
+00000BDE                           930  
+00000BDE                           931  
+00000BDE                           932  
+00000BDE                           933  -------------------- end include --------------------
+00000BDE                           934      INCLUDE 'PERIPH.X68'
+00000BDE                           935  SET_PEN_COLOR:
+00000BDE  303C 0050                936      MOVE #80,D0
+00000BE2  4E4F                     937      TRAP #15
+00000BE4  4E75                     938      RTS
+00000BE6                           939  
+00000BE6                           940  DRAW_PIX:
+00000BE6  303C 0052                941      MOVE #82,D0
+00000BEA  4E4F                     942      TRAP #15
+00000BEC  4E75                     943      RTS
+00000BEE                           944  
+00000BEE                           945  GET_PIX_COLOR:
+00000BEE  303C 0053                946      MOVE #83,D0
+00000BF2  4E4F                     947      TRAP #15
+00000BF4  4E75                     948      RTS
+00000BF6                           949  
+00000BF6                           950  MOVE_TO:
+00000BF6  303C 0056                951      MOVE #86,D0
+00000BFA  4E4F                     952      TRAP #15
+00000BFC  4E75                     953      RTS
+00000BFE                           954      
+00000BFE                           955  WIDTH_PEN:
+00000BFE  303C 005D                956      MOVE #93,D0
+00000C02  4E4F                     957      TRAP #15
+00000C04  4E75                     958      RTS
+00000C06                           959  
+00000C06                           960  DRAW_LINE:
+00000C06  303C 0054                961      MOVE #84,D0
+00000C0A  4E4F                     962      TRAP #15
+00000C0C  4E75                     963      RTS
+00000C0E                           964      
+00000C0E                           965  DRAW_RECT:
+00000C0E  303C 005A                966      MOVE #90,D0
+00000C12  4E4F                     967      TRAP #15
+00000C14  4E75                     968      RTS
+00000C16                           969      
+00000C16                           970  DRAW_FILL_RECT:
+00000C16  303C 0057                971      MOVE #87,D0
+00000C1A  4E4F                     972      TRAP #15
+00000C1C  4E75                     973      RTS
+00000C1E                           974      
+00000C1E                           975  SET_FILL_COLOR:
+00000C1E  303C 0051                976      MOVE #81,D0
+00000C22  4E4F                     977      TRAP #15
+00000C24  4E75                     978      RTS
+00000C26                           979  
+00000C26                           980  DRAW_BOX:
+00000C26  C2FC 0014                981      MULU #20,D1
+00000C2A  7614                     982      MOVE.L #20,D3
+00000C2C  D681                     983      ADD.L D1,D3
+00000C2E  C4FC 0014                984      MULU #20,D2
+00000C32  7814                     985      MOVE.L #20,D4
+00000C34  D882                     986      ADD.L D2,D4
+00000C36  7057                     987      MOVE.L #87,D0
+00000C38  4E4F                     988      TRAP #15
+00000C3A  4E75                     989      RTS
+00000C3C                           990      
+00000C3C                           991  DRAW_TEXTURES:
+00000C3C  C2FC 0014                992      MULU #20,D1
+00000C40  7614                     993      MOVE.L #20,D3
+00000C42  D681                     994      ADD.L D1,D3
+00000C44  C4FC 0014                995      MULU #20,D2
+00000C48  7814                     996      MOVE.L #20,D4
+00000C4A  D882                     997      ADD.L D2,D4
+00000C4C  7057                     998      MOVE.L #87,D0
+00000C4E  4E4F                     999      TRAP #15
+00000C50  4E75                    1000      RTS
+00000C52                          1001  
+00000C52                          1002  CLOSE_ALL_FILE:
+00000C52  303C 0032               1003      MOVE #50,D0
+00000C56  4E4F                    1004      TRAP #15
+00000C58  4E75                    1005      RTS
+00000C5A                          1006  
+00000C5A                          1007  
+00000C5A                          1008  
+00000C5A                          1009  
+00000C5A                          1010  
+00000C5A                          1011  
+00000C5A                          1012  
+00000C5A                          1013  
+00000C5A                          1014  
+00000C5A                          1015  
+00000C5A                          1016  
+00000C5A                          1017  
+00000C5A                          1018  
+00000C5A                          1019  
+00000C5A                          1020  
+00000C5A                          1021  -------------------- end include --------------------
+00000C5A                          1022      INCLUDE 'BIBLIO.X68'
+00000C5A                          1023  OPEN_FILE:
+00000C5A  303C 0033               1024      MOVE #51,D0
+00000C5E  4E4F                    1025      TRAP #15
+00000C60  4E75                    1026      RTS
+00000C62                          1027  CLOSE_FILE:
+00000C62  303C 0038               1028      MOVE #56,D0
+00000C66  4E4F                    1029      TRAP #15
+00000C68  4E75                    1030      RTS
+00000C6A                          1031  READ_FILE:
+00000C6A  303C 0035               1032      MOVE #53,D0
+00000C6E  4E4F                    1033      TRAP #15
+00000C70  4E75                    1034      RTS
+00000C72                          1035  
+00000C72                          1036  AFFCAR:
+00000C72  303C 0006               1037      MOVE #6, D0
+00000C76  4E4F                    1038      TRAP #15
+00000C78  4E75                    1039      RTS
+00000C7A                          1040  SAISCAR:
+00000C7A  303C 0005               1041      MOVE #5, D0
+00000C7E  4E4F                    1042      TRAP #15
+00000C80  4E75                    1043      RTS
+00000C82                          1044  
+00000C82                          1045  POS_CURS:
+00000C82  303C 000B               1046      MOVE #11, D0
+00000C86  4E4F                    1047      TRAP #15
+00000C88  4E75                    1048      RTS
+00000C8A                          1049  GET_AFFCHAR:
+00000C8A  303C 0016               1050      MOVE #22, D0
+00000C8E  4E4F                    1051      TRAP #15
+00000C90  4E75                    1052      RTS
+00000C92                          1053  GET_TIME:
+00000C92  7008                    1054      MOVE.L #8, D0
+00000C94  4E4F                    1055      TRAP #15
+00000C96  4E75                    1056      RTS
+00000C98                          1057  RAND_PIXEL:
+00000C98  4EB8 0C92               1058      JSR GET_TIME
+00000C9C  2601                    1059      MOVE.L D1,D3
+00000C9E  E18B                    1060      LSL.L #8,D3
+00000CA0  E18B                    1061      LSL.L #8,D3
+00000CA2  E18B                    1062      LSL.L #8,D3
+00000CA4  E08B                    1063      LSR.L #8,D3
+00000CA6  E08B                    1064      LSR.L #8,D3
+00000CA8  EC8B                    1065      LSR.L #6,D3
+00000CAA  2003                    1066      MOVE.L D3,D0
+00000CAC  0680 00000FFF           1067      ADD.L #$FFF,D0
+00000CB2  4EB9 00000E52           1068      JSR DENTISTE_WAIT_ROOM
+00000CB8  4EB8 0C92               1069      JSR GET_TIME
+00000CBC  E189                    1070      LSL.L #8,D1
+00000CBE  E189                    1071      LSL.L #8,D1
+00000CC0  E189                    1072      LSL.L #8,D1
+00000CC2  E089                    1073      LSR.L #8,D1
+00000CC4  E089                    1074      LSR.L #8,D1
+00000CC6  EC89                    1075      LSR.L #6,D1
+00000CC8  8283                    1076      OR.L D3,D1
+00000CCA  760A                    1077      MOVE.L #10, D3
+00000CCC  82C3                    1078      DIVU D3,D1
+00000CCE  82C3                    1079      DIVU D3,D1
+00000CD0  E089                    1080      LSR.L #8,D1
+00000CD2  E089                    1081      LSR.L #8,D1
+00000CD4  4E75                    1082      RTS
+00000CD6                          1083  AFFSTRING:
+00000CD6  7800                    1084      MOVE.L #0,D4
+00000CD8  4281                    1085      CLR.L D1
+00000CDA                          1086  BEGINING:
+00000CDA  B8BC 00000A5D           1087      CMP.L #2653,D4
+00000CE0  6700 017E               1088      BEQ RETURN
+00000CE4  1231 4000               1089      MOVE.B (A1,D4),D1
+00000CE8  5284                    1090      ADD.L #1,D4
+00000CEA  4EB8 0C72               1091      JSR AFFCAR
+00000CEE  60EA                    1092      BRA BEGINING    
+00000CF0                          1093  
+00000CF0                          1094  
+00000CF0                          1095   
+00000CF0                          1096  RAND:
+00000CF0  4EB8 0C92               1097      JSR GET_TIME
+00000CF4  C2BC 0000000F           1098      AND.L #$0000000F,D1
+00000CFA  5281                    1099      ADD.L #1,D1
+00000CFC  C2FC 0291               1100      MULU #657,D1
+00000D00  0681 000003CD           1101      ADD.L #973,D1
+00000D06  82FC 0313               1102      DIVU #787,D1
+00000D0A  E089                    1103      LSR.L #8,D1
+00000D0C  E089                    1104      LSR.L #8,D1
+00000D0E  C23C 0001               1105      AND.B #%00000001,D1
+00000D12  2601                    1106      MOVE.L D1,D3
+00000D14  7069                    1107      MOVE.L #$00000069,D0
+00000D16  4EB9 00000E52           1108      JSR DENTISTE_WAIT_ROOM
+00000D1C  4EB8 0C92               1109      JSR GET_TIME
+00000D20  C2BC 0000000F           1110      AND.L #$0000000F,D1
+00000D26  5281                    1111      ADD.L #1,D1
+00000D28  C2FC 0291               1112      MULU #657,D1
+00000D2C  0681 000003CD           1113      ADD.L #973,D1
+00000D32  82FC 0313               1114      DIVU #787,D1
+00000D36  E089                    1115      LSR.L #8,D1
+00000D38  E089                    1116      LSR.L #8,D1
+00000D3A  C23C 0001               1117      AND.B #%00000001,D1
+00000D3E  D681                    1118      ADD.L D1,D3
+00000D40  7069                    1119      MOVE.L #$00000069,D0
+00000D42  4EB9 00000E52           1120      JSR DENTISTE_WAIT_ROOM
+00000D48  4EB8 0C92               1121      JSR GET_TIME
+00000D4C  C2BC 0000000F           1122      AND.L #$0000000F,D1
+00000D52  5281                    1123      ADD.L #1,D1
+00000D54  C2FC 0291               1124      MULU #657,D1
+00000D58  0681 000003CD           1125      ADD.L #973,D1
+00000D5E  82FC 0313               1126      DIVU #787,D1
+00000D62  E089                    1127      LSR.L #8,D1
+00000D64  E089                    1128      LSR.L #8,D1
+00000D66  C23C 0001               1129      AND.B #%00000001,D1
+00000D6A  D283                    1130      ADD.L D3,D1
+00000D6C                          1131      
+00000D6C  4E75                    1132      RTS
+00000D6E                          1133  
+00000D6E                          1134  
+00000D6E                          1135      
+00000D6E                          1136  
+00000D6E                          1137  RAND39:
+00000D6E  4EB8 0C92               1138      JSR GET_TIME
+00000D72  2601                    1139      MOVE.L D1,D3
+00000D74  E18B                    1140      LSL.L #8,D3
+00000D76  E18B                    1141      LSL.L #8,D3
+00000D78  E18B                    1142      LSL.L #8,D3
+00000D7A  E08B                    1143      LSR.L #8,D3
+00000D7C  E08B                    1144      LSR.L #8,D3
+00000D7E  EC8B                    1145      LSR.L #6,D3
+00000D80  2003                    1146      MOVE.L D3,D0
+00000D82  4EB9 00000E52           1147      JSR DENTISTE_WAIT_ROOM
+00000D88  4EB8 0C92               1148      JSR GET_TIME
+00000D8C  E189                    1149      LSL.L #8,D1
+00000D8E  E189                    1150      LSL.L #8,D1
+00000D90  E189                    1151      LSL.L #8,D1
+00000D92  E089                    1152      LSR.L #8,D1
+00000D94  E089                    1153      LSR.L #8,D1
+00000D96  EC89                    1154      LSR.L #6,D1
+00000D98  8283                    1155      OR.L D3,D1
+00000D9A  761E                    1156      MOVE.L #30, D3
+00000D9C  82C3                    1157      DIVU D3,D1
+00000D9E  82C3                    1158      DIVU D3,D1
+00000DA0  E089                    1159      LSR.L #8,D1
+00000DA2  E089                    1160      LSR.L #8,D1
+00000DA4  4E75                    1161      RTS
+00000DA6                          1162  RAND24:
+00000DA6  4EB8 0C92               1163      JSR GET_TIME
+00000DAA  2C01                    1164      MOVE.L D1,D6
+00000DAC  E18E                    1165      LSL.L #8,D6
+00000DAE  E18E                    1166      LSL.L #8,D6
+00000DB0  E18E                    1167      LSL.L #8,D6
+00000DB2  E08E                    1168      LSR.L #8,D6
+00000DB4  E08E                    1169      LSR.L #8,D6
+00000DB6  EC8E                    1170      LSR.L #6,D6
+00000DB8  2006                    1171      MOVE.L D6,D0
+00000DBA  4EB9 00000E52           1172      JSR DENTISTE_WAIT_ROOM
+00000DC0  4EB8 0C92               1173      JSR GET_TIME
+00000DC4  E189                    1174      LSL.L #8,D1
+00000DC6  E189                    1175      LSL.L #8,D1
+00000DC8  E189                    1176      LSL.L #8,D1
+00000DCA  E089                    1177      LSR.L #8,D1
+00000DCC  E089                    1178      LSR.L #8,D1
+00000DCE  EC89                    1179      LSR.L #6,D1
+00000DD0  8286                    1180      OR.L D6,D1
+00000DD2  7C18                    1181      MOVE.L #24, D6
+00000DD4  82C6                    1182      DIVU D6,D1
+00000DD6  82C6                    1183      DIVU D6,D1
+00000DD8  E089                    1184      LSR.L #8,D1
+00000DDA  E089                    1185      LSR.L #8,D1
+00000DDC  4E75                    1186      RTS
+00000DDE                          1187  
+00000DDE                          1188  
+00000DDE                          1189  RANDOM_COLOR:
+00000DDE  4EB8 0CF0               1190      JSR RAND
+00000DE2  2A01                    1191      MOVE.L D1,D5
+00000DE4  4EB8 0CF0               1192      JSR RAND
+00000DE8  ED89                    1193      LSL.L #6,D1
+00000DEA  D285                    1194      ADD.L D5,D1
+00000DEC  4E75                    1195      RTS
+00000DEE                          1196  GEN_COLOR:
+00000DEE                          1197      *MOVE.L #$00EE2343, D1
+00000DEE  1018                    1198      MOVE.B (A0)+,D0
+00000DF0  B03C 0001               1199      CMP.B #1,D0
+00000DF4  6700 0050               1200      BEQ TEX
+00000DF8  B03C 0002               1201      CMP.B #2,D0
+00000DFC  6700 0014               1202      BEQ WIN
+00000E00  B03C 0003               1203      CMP.B #3,D0
+00000E04  6700 0026               1204      BEQ PATH
+00000E08  223C 00FF0099           1205      MOVE.L #$00FF0099,D1
+00000E0E  6000 0050               1206      BRA RETURN
+00000E12                          1207  WIN:
+00000E12  223C 00000099           1208      MOVE.L #$00000099,D1
+00000E18  4EB8 0C1E               1209      JSR SET_FILL_COLOR
+00000E1C  4EB8 0BDE               1210      JSR SET_PEN_COLOR
+00000E20                          1211      
+00000E20  2205                    1212      MOVE.L D5,D1
+00000E22  2406                    1213      MOVE.L D6,D2
+00000E24  4EB8 0C26               1214      JSR DRAW_BOX
+00000E28                          1215      
+00000E28  6000 0036               1216      BRA RETURN    
+00000E2C                          1217  PATH:
+00000E2C  223C 0017141C           1218      MOVE.L #$0017141c,D1
+00000E32                          1219      
+00000E32  4EB8 0C1E               1220      JSR SET_FILL_COLOR
+00000E36  4EB8 0BDE               1221      JSR SET_PEN_COLOR
+00000E3A                          1222      
+00000E3A  2205                    1223      MOVE.L D5,D1
+00000E3C  2406                    1224      MOVE.L D6,D2
+00000E3E  4EB8 0C26               1225      JSR DRAW_BOX
+00000E42                          1226      
+00000E42  6000 001C               1227      BRA RETURN
+00000E46                          1228  TEX:
+00000E46  2205                    1229      MOVE.L D5,D1
+00000E48  2406                    1230      MOVE.L D6,D2
+00000E4A                          1231      
+00000E4A  4EB8 0A80               1232      JSR DRAW_TEXTURE
+00000E4E                          1233      
+00000E4E  6000 0010               1234      BRA RETURN    
+00000E52                          1235      
+00000E52                          1236  DENTISTE_WAIT_ROOM:
+00000E52  0C80 00000000           1237      CMPI.L #0, D0
+00000E58  6700 0006               1238      BEQ RETURN
+00000E5C  5380                    1239      SUB.L #1, D0
+00000E5E  60F2                    1240      BRA DENTISTE_WAIT_ROOM
+00000E60                          1241  
+00000E60                          1242  RETURN:
+00000E60  4E75                    1243      RTS
+00000E62                          1244  FINPRG:
+00000E62  303C 0009               1245      MOVE #9, D0
+00000E66  4E4F                    1246      TRAP #15
+00000E68                          1247  
+00000E68                          1248  
+00000E68                          1249  
+00000E68                          1250  
+00000E68                          1251  
+00000E68                          1252  
+00000E68                          1253  
+00000E68                          1254  
+00000E68                          1255  
+00000E68                          1256  
+00000E68                          1257  
+00000E68                          1258  
+00000E68                          1259  
+00000E68                          1260  
+00000E68                          1261  
+00000E68                          1262  
+00000E68                          1263  
+00000E68                          1264  
+00000E68                          1265  
+00000E68                          1266  
+00000E68                          1267  
+00000E68                          1268  
+00000E68                          1269  
+00000E68                          1270  
+00000E68                          1271  
+00000E68                          1272  
+00000E68                          1273  
+00000E68                          1274  
+00000E68                          1275  
+00000E68                          1276  
+00000E68                          1277  
+00000E68                          1278  
+00000E68                          1279  
+00000E68                          1280  
+00000E68                          1281  
+00000E68                          1282  
+00000E68                          1283  
+00000E68                          1284  
+00000E68                          1285  
+00000E68                          1286  -------------------- end include --------------------
+00000E68                          1287      
+00000E68                          1288      *VARIABLES
+00000E68= 66 69 6E 61 6C 73 ...   1289      FINALE: DC.B 'finalscreen.txt',0
+00000E78                          1290      
+00000E78                          1291      MAP: DS.B 768
+00001178                          1292      
+00001178                          1293      
+00001178                          1294      
+00001178                          1295      
+00001178                          1296      
+00001178                          1297      
+00001178                          1298      
+00001178                          1299      
+00001178                          1300      LAST_X: DS.L 1
+0000117C                          1301      LAST_Y: DS.L 1
+00001180                          1302  
+00001180                          1303      LEVEL: DS.L 1
+00001184                          1304      
+00001184                          1305      FILE: DS.L 1
+00001188                          1306      
+00001188                          1307      START_X: DS.L 1
+0000118C                          1308      START_Y: DS.L 1
+00001190                          1309      
+00001190                          1310      WIN_X: DS.L 1
+00001194                          1311      WIN_Y: DS.L 1
+00001198                          1312      
+00001198                          1313      VOID_X: DS.L 2
+000011A0                          1314      VOID_Y: DS.L 2
+000011A8                          1315  
+000011A8                          1316      DELTA: DS.L 1
+000011AC                          1317      OMEGA: DS.L 1
+000011B0                          1318      
+000011B0                          1319      PLAYER_X: DS.L 1
+000011B4                          1320      PLAYER_Y: DS.L 1
+000011B8                          1321      
+000011B8                          1322      
+000011B8                          1323      
+000011B8= 63 72 74 69 6E 67 ...   1324      TEXTURE: DC.B 'crtinge.bmp',0
+000011C4                          1325      
+000011C4= 74 69 74 6C 65 2E ...   1326      TITLE: DC.B 'title.txt',0
+000011CE                          1327      
+000011CE                          1328      
+000011CE                          1329  
+000011CE                          1330          
+000011CE                          1331      
+000011CE                          1332      
+000011CE                          1333      
+000011CE                          1334      
+000011CE                          1335      
+000011CE                          1336      END $100
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+AFFCAR              C72
+AFFSTRING           CD6
+BEFORE_CLOSEST_TO_START  78C
+BEGINING            CDA
+BOT                 4B8
+CLOSE_ALL_FILE      C52
+CLOSE_FILE          C62
+CONTINUE_BUG        206
+CONTINUE_FIND_CLOSEST_TO_START  6AA
+DELTA               11A8
+DENTISTE_WAIT_ROOM  E52
+DRAW_BOX            C26
+DRAW_FILL_RECT      C16
+DRAW_LINE           C06
+DRAW_MAP            5C8
+DRAW_MAP_LOOP       5D2
+DRAW_MAP_LOOP_RESUME  5EC
+DRAW_MAP_YFIX       5F8
+DRAW_PIX            BE6
+DRAW_RECT           C0E
+DRAW_TEXTURE        A80
+DRAW_TEXTURES       C3C
+DRAW_TEXTURE_LOOP   ADC
+DRAW_TEXTURE_LOOP_RESUME  AF4
+DRAW_TEXTURE_YFIX   B00
+DRAW_TITLE          A6C
+FILE                1184
+FIN                 578
+FINALE              E68
+FIND_CLOSEST_TO_LAST  91A
+FIND_CLOSEST_TO_START  694
+FIND_CLOSEST_TO_START_FROM_X  6CE
+FIND_CLOSEST_TO_START_FROM_Y  72C
+FINPRG              E62
+FIN_TEXTURE         BB8
+GENERATE_CHANGING_COORDS  5BE
+GENERATE_WALLS      5FE
+GENERATE_WALLS_LOOP  608
+GENERATE_WALLS_RETURN  63C
+GENERATE_WALLS_Y    652
+GEN_COLOR           DEE
+GEN_SPAWN_WIN       A4C
+GET_AFFCHAR         C8A
+GET_COLOR           57A
+GET_COLOR_SPAWN     5AE
+GET_COLOR_WIN       5B6
+GET_COORDS          662
+GET_PIX_COLOR       BEE
+GET_TIME            C92
+INCREMENT_OFFSET    BBA
+LAST_X              1178
+LAST_Y              117C
+LEFT                388
+LEVEL               1180
+LEVELS              162
+LOOP                B0A
+LOOP_BUG            1EE
+LOOP_RESUME         B38
+MAP                 E78
+MAX_X               BD6
+MAX_Y               BDA
+MOVEMENT            236
+MOVE_TO             BF6
+OFFSET              BC2
+OMEGA               11AC
+OPEN_FILE           C5A
+PADDING             BC6
+PATH                E2C
+PATH_GENERATOR      66C
+PLAYER_X            11B0
+PLAYER_Y            11B4
+POS_CURS            C82
+PROCESS_2_PIXELS    B38
+PROCESS_CLOSEST_TO_LAST_X_NEG  9D4
+PROCESS_CLOSEST_TO_LAST_X_POS  960
+PROCESS_CLOSEST_TO_LAST_Y_NEG  A10
+PROCESS_CLOSEST_TO_LAST_Y_POS  998
+PROCESS_CLOSEST_TO_START  7AE
+PROCESS_CLOSEST_TO_START_X_NEG  89A
+PROCESS_CLOSEST_TO_START_X_POS  820
+PROCESS_CLOSEST_TO_START_Y_NEG  8DA
+PROCESS_CLOSEST_TO_START_Y_POS  85C
+PUT_ONE             64A
+RAND                CF0
+RAND24              DA6
+RAND39              D6E
+RANDOM_COLOR        DDE
+RAND_PIXEL          C98
+READ_FILE           C6A
+RETURN              E60
+REWINDING           274
+REWINDING_BOT       56E
+REWINDING_LEFT      55A
+REWINDING_RIGHT     550
+REWINDING_TOP       564
+RIGHT               420
+RTS_LTE             66A
+SAISCAR             C7A
+SAVE_CLOSEST_TO_START_X1  706
+SAVE_CLOSEST_TO_START_X2  716
+SAVE_CLOSEST_TO_START_Y1  766
+SAVE_CLOSEST_TO_START_Y2  776
+SCALING             BCA
+SCALING_X           BCE
+SCALING_Y           BD2
+SET_FILL_COLOR      C1E
+SET_PEN_COLOR       BDE
+SKIP_CLOSEST_TO_START_FROM_X  702
+SKIP_CLOSEST_TO_START_FROM_Y  762
+SKIP_RAND           7EE
+SKIP_SIMPLE_BLOC    5E0
+START               1CC
+START_X             1188
+START_Y             118C
+STOP                1D8
+TEX                 E46
+TEXTURE             11B8
+TITLE               11C4
+TOP                 2F0
+VOID_X              1198
+VOID_Y              11A0
+WIDTH_PEN           BFE
+WIN                 E12
+WIN_X               1190
+WIN_Y               1194

@@ -1,0 +1,297 @@
+00000000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 27/12/2023 20:51:09
+
+00000000                             1  OPEN_FILE:
+00000000  303C 0033                  2      MOVE #51,D0
+00000004  4E4F                       3      TRAP #15
+00000006  4E75                       4      RTS
+00000008                             5  CLOSE_FILE:
+00000008  303C 0038                  6      MOVE #56,D0
+0000000C  4E4F                       7      TRAP #15
+0000000E  4E75                       8      RTS
+00000010                             9  READ_FILE:
+00000010  303C 0035                 10      MOVE #53,D0
+00000014  4E4F                      11      TRAP #15
+00000016  4E75                      12      RTS
+00000018                            13  
+00000018                            14  AFFCAR:
+00000018  303C 0006                 15      MOVE #6, D0
+0000001C  4E4F                      16      TRAP #15
+0000001E  4E75                      17      RTS
+00000020                            18  SAISCAR:
+00000020  303C 0005                 19      MOVE #5, D0
+00000024  4E4F                      20      TRAP #15
+00000026  4E75                      21      RTS
+00000028                            22  
+00000028                            23  POS_CURS:
+00000028  303C 000B                 24      MOVE #11, D0
+0000002C  4E4F                      25      TRAP #15
+0000002E  4E75                      26      RTS
+00000030                            27  GET_AFFCHAR:
+00000030  303C 0016                 28      MOVE #22, D0
+00000034  4E4F                      29      TRAP #15
+00000036  4E75                      30      RTS
+00000038                            31  GET_TIME:
+00000038  7008                      32      MOVE.L #8, D0
+0000003A  4E4F                      33      TRAP #15
+0000003C  4E75                      34      RTS
+0000003E                            35  RAND_PIXEL:
+0000003E  4EB8 0038                 36      JSR GET_TIME
+00000042  2601                      37      MOVE.L D1,D3
+00000044  E18B                      38      LSL.L #8,D3
+00000046  E18B                      39      LSL.L #8,D3
+00000048  E18B                      40      LSL.L #8,D3
+0000004A  E08B                      41      LSR.L #8,D3
+0000004C  E08B                      42      LSR.L #8,D3
+0000004E  EC8B                      43      LSR.L #6,D3
+00000050  2003                      44      MOVE.L D3,D0
+00000052  0680 00000FFF             45      ADD.L #$FFF,D0
+00000058  4EB9 000001C6             46      JSR DENTISTE_WAIT_ROOM
+0000005E  4EB8 0038                 47      JSR GET_TIME
+00000062  E189                      48      LSL.L #8,D1
+00000064  E189                      49      LSL.L #8,D1
+00000066  E189                      50      LSL.L #8,D1
+00000068  E089                      51      LSR.L #8,D1
+0000006A  E089                      52      LSR.L #8,D1
+0000006C  EC89                      53      LSR.L #6,D1
+0000006E  8283                      54      OR.L D3,D1
+00000070  760A                      55      MOVE.L #10, D3
+00000072  82C3                      56      DIVU D3,D1
+00000074  82C3                      57      DIVU D3,D1
+00000076  E089                      58      LSR.L #8,D1
+00000078  E089                      59      LSR.L #8,D1
+0000007A  4E75                      60      RTS
+0000007C                            61  AFFSTRING:
+0000007C  7800                      62      MOVE.L #0,D4
+0000007E                            63  BEGINING:
+0000007E  B882                      64      CMP.L D2,D4
+00000080  6700 0152                 65      BEQ RETURN
+00000084  1231 4000                 66      MOVE.B (A1,D4),D1
+00000088  5284                      67      ADD.L #1,D4
+0000008A  4EB8 0018                 68      JSR AFFCAR
+0000008E  60EE                      69      BRA BEGINING    
+00000090                            70  
+00000090                            71  
+00000090                            72   
+00000090                            73  *RAND:
+00000090                            74  *    JSR GET_TIME
+00000090                            75  *    MOVE.L D1,D6
+00000090                            76  *    LSL.L #8,D6
+00000090                            77  *    LSL.L #8,D6
+00000090                            78  *    LSL.L #8,D6
+00000090                            79  *    LSR.L #8,D6
+00000090                            80  *    LSR.L #8,D6
+00000090                            81  *    LSR.L #6,D6
+00000090                            82  *    MOVE.L D6,D0
+00000090                            83  *    JSR DENTISTE_WAIT_ROOM
+00000090                            84  *    JSR GET_TIME
+00000090                            85  *    LSL.L #8,D1
+00000090                            86  *    LSL.L #8,D1
+00000090                            87  *    LSL.L #8,D1
+00000090                            88  *    LSR.L #8,D1
+00000090                            89  *    LSR.L #8,D1
+00000090                            90  *    LSR.L #6,D1
+00000090                            91  *    OR.L D6,D1
+00000090                            92  *    MOVE.L #10, D6
+00000090                            93  *    DIVU D6,D1
+00000090                            94  *    DIVU D6,D1
+00000090                            95  *    LSR.L #8,D1
+00000090                            96  *    LSR.L #8,D1
+00000090                            97  *    RTS
+00000090                            98  RAND:
+00000090  4EB8 0038                 99      JSR GET_TIME
+00000094  C2BC 0000000F            100      AND.L #$0000000F,D1
+0000009A  5281                     101      ADD.L #1,D1
+0000009C  C2FC 0291                102      MULU #657,D1
+000000A0  0681 000003CD            103      ADD.L #973,D1
+000000A6  82FC 0313                104      DIVU #787,D1
+000000AA  E089                     105      LSR.L #8,D1
+000000AC  E089                     106      LSR.L #8,D1
+000000AE  C23C 0001                107      AND.B #%00000001,D1
+000000B2  2601                     108      MOVE.L D1,D3
+000000B4  7069                     109      MOVE.L #$00000069,D0
+000000B6  4EB9 000001C6            110      JSR DENTISTE_WAIT_ROOM
+000000BC  4EB8 0038                111      JSR GET_TIME
+000000C0  C2BC 0000000F            112      AND.L #$0000000F,D1
+000000C6  5281                     113      ADD.L #1,D1
+000000C8  C2FC 0291                114      MULU #657,D1
+000000CC  0681 000003CD            115      ADD.L #973,D1
+000000D2  82FC 0313                116      DIVU #787,D1
+000000D6  E089                     117      LSR.L #8,D1
+000000D8  E089                     118      LSR.L #8,D1
+000000DA  C23C 0001                119      AND.B #%00000001,D1
+000000DE  D681                     120      ADD.L D1,D3
+000000E0  7069                     121      MOVE.L #$00000069,D0
+000000E2  4EB9 000001C6            122      JSR DENTISTE_WAIT_ROOM
+000000E8  4EB8 0038                123      JSR GET_TIME
+000000EC  C2BC 0000000F            124      AND.L #$0000000F,D1
+000000F2  5281                     125      ADD.L #1,D1
+000000F4  C2FC 0291                126      MULU #657,D1
+000000F8  0681 000003CD            127      ADD.L #973,D1
+000000FE  82FC 0313                128      DIVU #787,D1
+00000102  E089                     129      LSR.L #8,D1
+00000104  E089                     130      LSR.L #8,D1
+00000106  C23C 0001                131      AND.B #%00000001,D1
+0000010A  D283                     132      ADD.L D3,D1
+0000010C                           133      
+0000010C  4E75                     134      RTS
+0000010E                           135  
+0000010E                           136  
+0000010E                           137      
+0000010E                           138  
+0000010E                           139  RAND39:
+0000010E  4EB8 0038                140      JSR GET_TIME
+00000112  2601                     141      MOVE.L D1,D3
+00000114  E18B                     142      LSL.L #8,D3
+00000116  E18B                     143      LSL.L #8,D3
+00000118  E18B                     144      LSL.L #8,D3
+0000011A  E08B                     145      LSR.L #8,D3
+0000011C  E08B                     146      LSR.L #8,D3
+0000011E  EC8B                     147      LSR.L #6,D3
+00000120  2003                     148      MOVE.L D3,D0
+00000122  4EB9 000001C6            149      JSR DENTISTE_WAIT_ROOM
+00000128  4EB8 0038                150      JSR GET_TIME
+0000012C  E189                     151      LSL.L #8,D1
+0000012E  E189                     152      LSL.L #8,D1
+00000130  E189                     153      LSL.L #8,D1
+00000132  E089                     154      LSR.L #8,D1
+00000134  E089                     155      LSR.L #8,D1
+00000136  EC89                     156      LSR.L #6,D1
+00000138  8283                     157      OR.L D3,D1
+0000013A  761E                     158      MOVE.L #30, D3
+0000013C  82C3                     159      DIVU D3,D1
+0000013E  82C3                     160      DIVU D3,D1
+00000140  E089                     161      LSR.L #8,D1
+00000142  E089                     162      LSR.L #8,D1
+00000144  4E75                     163      RTS
+00000146                           164  RAND24:
+00000146  4EB8 0038                165      JSR GET_TIME
+0000014A  2C01                     166      MOVE.L D1,D6
+0000014C  E18E                     167      LSL.L #8,D6
+0000014E  E18E                     168      LSL.L #8,D6
+00000150  E18E                     169      LSL.L #8,D6
+00000152  E08E                     170      LSR.L #8,D6
+00000154  E08E                     171      LSR.L #8,D6
+00000156  EC8E                     172      LSR.L #6,D6
+00000158  2006                     173      MOVE.L D6,D0
+0000015A  4EB9 000001C6            174      JSR DENTISTE_WAIT_ROOM
+00000160  4EB8 0038                175      JSR GET_TIME
+00000164  E189                     176      LSL.L #8,D1
+00000166  E189                     177      LSL.L #8,D1
+00000168  E189                     178      LSL.L #8,D1
+0000016A  E089                     179      LSR.L #8,D1
+0000016C  E089                     180      LSR.L #8,D1
+0000016E  EC89                     181      LSR.L #6,D1
+00000170  8286                     182      OR.L D6,D1
+00000172  7C18                     183      MOVE.L #24, D6
+00000174  82C6                     184      DIVU D6,D1
+00000176  82C6                     185      DIVU D6,D1
+00000178  E089                     186      LSR.L #8,D1
+0000017A  E089                     187      LSR.L #8,D1
+0000017C  4E75                     188      RTS
+0000017E                           189  
+0000017E                           190  
+0000017E                           191  RANDOM_COLOR:
+0000017E  4EB8 0090                192      JSR RAND
+00000182  2A01                     193      MOVE.L D1,D5
+00000184  4EB8 0090                194      JSR RAND
+00000188  ED89                     195      LSL.L #6,D1
+0000018A  D285                     196      ADD.L D5,D1
+0000018C  4E75                     197      RTS
+0000018E                           198  GEN_COLOR:
+0000018E                           199      *MOVE.L #$00EE2343, D1
+0000018E  223C 00C0C0C0            200      MOVE.L #$00C0C0C0, D1
+00000194  1018                     201      MOVE.B (A0)+,D0
+00000196  B03C 0001                202      CMP.B #1,D0
+0000019A  6700 0038                203      BEQ RETURN
+0000019E  B03C 0002                204      CMP.B #2,D0
+000001A2  6700 0012                205      BEQ WIN
+000001A6  B03C 0003                206      CMP.B #3,D0
+000001AA  6700 0012                207      BEQ PATH
+000001AE  223C 00FF0099            208      MOVE.L #$00FF0099,D1
+000001B4  4E75                     209      RTS
+000001B6                           210  WIN:
+000001B6  223C 00000099            211      MOVE.L #$00000099,D1
+000001BC  4E75                     212      RTS    
+000001BE                           213  PATH:
+000001BE  223C 00AAFAAA            214      MOVE.L #$00AAFAAA,D1
+000001C4  4E75                     215      RTS
+000001C6                           216  DENTISTE_WAIT_ROOM:
+000001C6  0C80 00000000            217      CMPI.L #0, D0
+000001CC  6700 0006                218      BEQ RETURN
+000001D0  5380                     219      SUB.L #1, D0
+000001D2  60F2                     220      BRA DENTISTE_WAIT_ROOM
+000001D4                           221  
+000001D4                           222  RETURN:
+000001D4  4E75                     223      RTS
+000001D6                           224  FINPRG:
+000001D6  303C 0009                225      MOVE #9, D0
+000001DA  4E4F                     226      TRAP #15
+000001DC                           227  
+000001DC                           228  
+000001DC                           229  
+000001DC                           230  
+000001DC                           231  
+000001DC                           232  
+000001DC                           233  
+000001DC                           234  
+000001DC                           235  
+000001DC                           236  
+000001DC                           237  
+000001DC                           238  
+000001DC                           239  
+000001DC                           240  
+000001DC                           241  
+000001DC                           242  
+000001DC                           243  
+000001DC                           244  
+000001DC                           245  
+000001DC                           246  
+000001DC                           247  
+000001DC                           248  
+000001DC                           249  
+000001DC                           250  
+000001DC                           251  
+000001DC                           252  
+000001DC                           253  
+000001DC                           254  
+000001DC                           255  
+000001DC                           256  
+000001DC                           257  
+000001DC                           258  
+000001DC                           259  
+000001DC                           260  
+000001DC                           261  
+000001DC                           262  
+000001DC                           263  
+Line 264 WARNING: END directive missing, starting address not set
+
+No errors detected
+1 warning generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+AFFCAR              18
+AFFSTRING           7C
+BEGINING            7E
+CLOSE_FILE          8
+DENTISTE_WAIT_ROOM  1C6
+FINPRG              1D6
+GEN_COLOR           18E
+GET_AFFCHAR         30
+GET_TIME            38
+OPEN_FILE           0
+PATH                1BE
+POS_CURS            28
+RAND                90
+RAND24              146
+RAND39              10E
+RANDOM_COLOR        17E
+RAND_PIXEL          3E
+READ_FILE           10
+RETURN              1D4
+SAISCAR             20
+WIN                 1B6

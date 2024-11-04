@@ -6,6 +6,12 @@ Ce projet implémente un jeu de labyrinthe 2D en langage d’assemblage, dévelo
 
 L'objectif de ce projet est de créer un jeu dans lequel le joueur doit naviguer dans un labyrinthe généré aléatoirement pour atteindre une sortie. Le jeu comporte 5 niveaux, chacun étant généré de façon unique à chaque partie.
 
+## Aperçu
+
+![Aperçu 1](./Apercu/1.png)
+![Aperçu 2](./Apercu/2.png)
+![Aperçu 3](./Apercu/3.png)
+
 ## Fonctionnalités
 
 - **Génération aléatoire de labyrinthes** : Chaque niveau est un labyrinthe unique généré par un algorithme procédural.

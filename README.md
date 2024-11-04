@@ -36,6 +36,8 @@ L'algorithme de génération du labyrinthe repose sur la création de chemins al
    - Un tableau `TAB_POINT` enregistre deux coordonnées candidates `[x1, y1]` et `[x2, y2]` pour le chemin.
    - L'algorithme identifie les cases rouges les plus proches du départ et les ajoute à `TAB_POINT` pour une exploration continue.
 
+![Schéma de fonctionnement](./SchémaEtapes.png)
+
 6. **Expansion aléatoire des chemins** :
    - Un dé est utilisé pour choisir une case dans `TAB_POINT`.
    - Une seconde case proche avec un chemin (`3`) est choisie et reliée au chemin existant, créant ainsi un parcours sinueux.
